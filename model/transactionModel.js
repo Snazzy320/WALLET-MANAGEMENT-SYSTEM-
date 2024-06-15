@@ -10,14 +10,10 @@ const transactionSchema = new mongoose.Schema({
     },
     
     amount: {
-        type: String, default: 0
+        type: Number, default: 0
     },
  
     user: {
-        type: String, required: true
-    },
-
-    date: {
         type: String, required: true
     },
 
@@ -25,15 +21,9 @@ const transactionSchema = new mongoose.Schema({
         type: String
     },
 
-    wallet_balance: {
-        type: String, default: 0
-    },
-
-    active: {type: Boolean, default:true},
-
 },{timestamps:true })
 
 
-// const transactionEntries = new mongoose.model("transactionEntries", userSchema)
+const transactionEntries = new mongoose.model("transaction Entries", transactionSchema)
 
-// module.exports = transactionEntries
+module.exports = transactionEntries

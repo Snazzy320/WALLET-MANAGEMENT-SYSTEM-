@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
         type: String, required: true
     },
     
-    username: {
+    userName: {
         type: String, required: true
     },
  
@@ -18,11 +18,11 @@ const userSchema = new mongoose.Schema({
     },
 
     password: {
-        type: String, required: true
+        type: String , required: true
     },
 
     phoneNumber: {
-        type: String
+        type: String, required: true
     },
 
     wallet_balance: {
@@ -34,6 +34,6 @@ const userSchema = new mongoose.Schema({
 },{timestamps:true })
 
 
-const usersEntries = new mongoose.model("usersEntries", userSchema)
+const usersEntries = new mongoose.model("user's Entries", userSchema)
 
 module.exports = usersEntries
