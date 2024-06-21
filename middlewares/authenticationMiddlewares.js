@@ -1,4 +1,4 @@
-const validateRegistration = async (req, res, next)=>{
+const validateDetails = async (req, res, next)=>{
 
     const { email, password } = req.body
 
@@ -75,11 +75,59 @@ const validatEmail = async (req, res, next)=>{
     next()
 
 }
+
+const validateOldPassword = async (req, res, next)=>{
+
+    const { oldPassword } = req.body
+
+    error = [  ]
+
+    if(!oldPassword){
+        error.push("please enter old password")
+    } else if(oldPassword.length < 6){
+        error.push("old password must be 6 characters")
+    } else if(!/[0-9]/.test(oldPassword)){
+        error.push("old password must contain a number")
+    }
+
+    if(error.length > 0){
+        return res.status(400).json({message: error})
+    }
+
+    next()   
+
+}
+
+const validateNewPassword = async (req, res, next)=>{
+
+    const { newPassword } = req.body
+
+    error = [  ]
+
+    if(! newPassword ){
+        error.push("please enter  new password ")
+    } else if(newPassword.length < 6){
+        error.push(" new password  must be 6 characters")
+    } else if(!/[0-9]/.test(newPassword)){
+        error.push(" new password must contain a number")
+    }
+
+    if(error.length > 0){
+        return res.status(400).json({message: error})
+    }
+
+    next()   
+
+}
+
+
       
 
 module.exports = {
-    validateRegistration,
+    validateDetails,
     ValidateEmailPattern,
     validatePassword,
-    validatEmail
+    validatEmail,
+    validateOldPassword,
+    validateNewPassword
 }

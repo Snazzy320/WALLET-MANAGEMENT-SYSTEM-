@@ -187,43 +187,41 @@ const handleNewUserRegisteration = async(req, res)=>{
 
     const userPasswordUpdate = async(req,res)=>{
 
-        try {
-            
-            const { id } = req.params
-            // get old password from user
-            // retrieve old password and salt from database
-            // unhash old password from the database and compare with the old password provided by the user
-            // hash new password and save it to the database if the prev step was successfull else raise a 401 error
+    try {
+        const { userName, oldPassword, newPassword } = req.body;
 
-            const { password } = req.body
+      // Find the user by username
+      const user = await usersEntries.findOne({ userName });
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Compare the old password with the stored hashed password
+      const isMatch = await bcrypt.compare(oldPassword, user.password);
+  
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Old password is incorrect' });
+      }
+  
+      // Hash the new password
+      const hashedNewPassword = await bcrypt.hash(newPassword, 12);
+  
+      // Update the user's password in the database
+      user.password = hashedNewPassword;
+      await user.save();
+  
+      res.status(200).json({
+         message: 'Password updated successfully',
+         user: hashedNewPassword
+          
+        });
 
-            // Hash password with bcrypt
-            const hashedPassword =await bcrypt.hash(password, 12)
-            
-            const passwordUpdated = await usersEntries.findByIdAndUpdate( 
-                id, 
-                {password: hashedPassword},
-                {new: true}
-            )
-
-             return res.status(200).json({
-                message: "successful",
-                user: passwordUpdated
-
-            })
-
-            
-            
-
-        } catch (error) {
-
-            return res.status(500).json({message: error.message})
-            
-        }
-
-      
-        
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
+
+}
 
     const handleFullUpdate = async(req, res)=>{
 

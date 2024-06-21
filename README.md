@@ -6,7 +6,7 @@ This project is a Wallet Management System designed to help users manage their d
 
 ## Background
 
-In today's digital age, managing finances efficiently is more crucial than ever. Digital wallets have revolutionized the way we handle transactions, providing a seamless and secure method for storing, sending, and receiving money. From everyday consumers to large enterprises, digital wallets offer convenience and innovation in financial management.
+In today's digital age, managing finances efficiently is more crucial than ever. Digital wallets have revolutionized the way we handle transactions, providing a seamless and secure method for storing, sending, and receiving money. From everyday consumers to large enterprises, digital wallets offer conveniegitnce and innovation in financial management.
 
 ## Objective
 The objective of this assignment is to design and implement a comprehensive Wallet Management System. This system will allow users to create and manage their digital wallets, perform transactions, view transaction histories, and maintain their financial data securely.
