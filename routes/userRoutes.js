@@ -1,7 +1,7 @@
 const express = require("express")
 
 const ctrl = require("../controllers/userController")
-const  {validateDetails, validatePassword, validatEmail, validateOldPassword, validateNewPassword } =require("../middlewares/authenticationMiddlewares")
+const  {validateDetails, validatePassword, validatEmail, validateOldPassword, validateNewPassword } =require("../middlewares/authentication-1")
 
 
 const router = express.Router()

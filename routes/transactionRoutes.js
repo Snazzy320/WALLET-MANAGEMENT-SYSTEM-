@@ -2,7 +2,7 @@ const express = require("express")
 
 const userCtrl = require("../controllers/userController")
 const transCtrl = require("../controllers/transactionController")
-const  {  verifyUser  } =require("../middlewares/authentication-2-middleware.js")
+const  {  verifyUser  } =require("../middlewares/authentication-2")
 
 
 
