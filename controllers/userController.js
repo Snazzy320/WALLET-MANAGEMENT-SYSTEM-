@@ -1,6 +1,7 @@
 const usersEntries = require("../model/usersModel")
 const bcrypt = require("bcrypt")
 const jsonwebtoken = require("jsonwebtoken")
+const { sendWelcomeEmail,sendResetPasswordEmail  } = require("../utilities/utilities")
 
 
 const  handleAllUsersDetails = async(req, res)=>{
@@ -65,13 +66,20 @@ const handleNewUserRegisteration = async(req, res)=>{
         const newUser = new usersEntries({ fullName, userName, email, password: hashedPassword, phoneNumber })
     
     
-    // Save user details
+    // // Save user details
        await newUser.save()
 
 
     
     // send user an email
     // send Email
+
+    const emailSubject = "Welcome to Our Service"
+
+    const respond = await sendWelcomeEmail(fullName, email, emailSubject)
+   
+
+
 
     
     
@@ -301,9 +309,14 @@ const handleNewUserRegisteration = async(req, res)=>{
         const accessToken = await jsonwebtoken.sign(userPayload, process.env.ACCESS_TOKEN,
             {expiresIn: "30m"})
 
-        const websiteUrl= `www.wallet.com/${accessToken}` 
+        const Url= `www.wallet.com/${accessToken}` 
         
         // Send Email
+
+         const emailSubject = "Reset Wallet Password"
+
+        const response = await sendResetPasswordEmail ( email, emailSubject, Url )
+        
 
 
         return res.status(200).json({
@@ -320,17 +333,15 @@ const handleNewUserRegisteration = async(req, res)=>{
 
     const resetPassword = async(req,res)=>{
 
-        try {
+        try {   
 
-            
-
-            const { password, email} = req.body
+            const { email, password} = req.body
 
             const user = await usersEntries.findOne({email})
 
             if(!user) {
 
-                 return req.status(404).json.com({message: "user not found"})
+                 return res.status(404).json({message: "user not found"})
             }
 
             const hashedPassword = await bcrypt.hash(password, 12)
@@ -386,15 +397,10 @@ const handleNewUserRegisteration = async(req, res)=>{
     const getBalance = async(req, res)=>{
 
         try {
-            const { id } = req.params
 
-            try {
-                var oneUser =await usersEntries.findById(id)
-            } catch (error) {
-                return res.status(404).json({message: "user does not exist"})
-            }
+            const user = req.user
 
-            balance = oneUser.wallet_balance
+            const balance = user.wallet_balance
 
             return res.status(200).json({
                 message: "successful",
@@ -412,7 +418,7 @@ const handleNewUserRegisteration = async(req, res)=>{
 
 module.exports = {
     handleNewUserRegisteration,
-    handleAllUsersDetails ,
+    handleAllUsersDetails,
     handleUsersLogin,
     handleGetOneUser,
     userPasswordUpdate,

@@ -54,12 +54,32 @@ const validatePassword = async (req, res, next)=>{
 
     next()   
 
+}
 
+const validatEmail = async (req, res, next)=>{
+
+    const { email,} = req.body
+
+    error = []
+
+    if(!email){
+        error.push("please enter email")
+    }else if(!ValidateEmailPattern(email)){
+        error.push("invalid email")
+    }
+
+    if(error.length > 0){
+        return res.status(400).json({message: error})
+    }
+
+    next()
 
 }
+      
 
 module.exports = {
     validateRegistration,
     ValidateEmailPattern,
-    validatePassword 
+    validatePassword,
+    validatEmail
 }
