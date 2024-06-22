@@ -188,10 +188,12 @@ const handleNewUserRegisteration = async(req, res)=>{
     const userPasswordUpdate = async(req,res)=>{
 
     try {
-        const { userName, oldPassword, newPassword } = req.body;
 
-      // Find the user by username
-      const user = await usersEntries.findOne({ userName });
+        const user = req.user
+        const { oldPassword, newPassword } = req.body;
+
+      // Find the user by id from the accessToken
+      const users = await usersEntries.findOne({ user: user.id});
   
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
@@ -227,17 +229,54 @@ const handleNewUserRegisteration = async(req, res)=>{
 
         try {
 
-        const { id } = req.params
+        const user = req.user
 
-        const { fullName, userName, email, password, phoneNumber } = req.body
+        // const { id } = req.params
 
-          // Hash password with bcrypt
-          const hashedPassword =await bcrypt.hash(password, 12)
+        const { fullName, userName, email, oldPassword, newPassword, phoneNumber } = req.body
+
+        const alreadyExistingUserName = await usersEntries.findOne({userName})
+
+        if(alreadyExistingUserName){
+            return res.status(400).json({message: "this username already exists!"})
+        }
+
+        
+        const alreadyExistingUser = await usersEntries.findOne({email})
+    
+        if(alreadyExistingUser){
+            return res.status(400).json({message: "this user account already exists!"})
+        }
+
+        const alreadyExistingPhoneNumber = await usersEntries.findOne({phoneNumber})
+
+        if(alreadyExistingPhoneNumber){
+            return res.status(400).json({message: "this phoneNumber already exists!"})
+        }
+
+
+          // Compare the old password with the stored hashed password
+      const isMatch = await bcrypt.compare(oldPassword, user.password);
+  
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Old password is incorrect' });
+      }
+  
+      // Hash the new password
+      const hashedNewPassword = await bcrypt.hash(newPassword, 12);
+  
+      // Update the user's password in the database
+      user.password = hashedNewPassword;
+      await user.save();
+
+
+        //   // Hash password with bcrypt
+        //   const hashedPassword =await bcrypt.hash(password, 12)
             
          
         const fullUpdate = await usersEntries.findByIdAndUpdate(
-            id,
-            {fullName, userName, email, password:hashedPassword, phoneNumber},
+            user.id,
+            {fullName, userName, email, password:hashedNewPassword, phoneNumber},
             {new:true}
         )
         
