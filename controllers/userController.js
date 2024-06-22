@@ -245,7 +245,7 @@ const handleNewUserRegisteration = async(req, res)=>{
         const alreadyExistingUser = await usersEntries.findOne({email})
     
         if(alreadyExistingUser){
-            return res.status(400).json({message: "this user account already exists!"})
+            return res.status(400).json({message: "this email address already exists!"})
         }
 
         const alreadyExistingPhoneNumber = await usersEntries.findOne({phoneNumber})
