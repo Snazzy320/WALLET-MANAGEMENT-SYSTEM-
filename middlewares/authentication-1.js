@@ -120,6 +120,33 @@ const validateNewPassword = async (req, res, next)=>{
 
 }
 
+const validatePhoneNumber = async (req, res, next)=>{
+
+    const { phoneNumber } = req.body
+
+    error = []
+
+    if(!phoneNumber){
+        error.push("please enter phone number")
+    }else if(!PhoneNumberPattern(phoneNumber)){
+        error.push("invalid phone number")
+    }
+
+    if(error.length > 0){
+        return res.status(400).json({message: error})
+    }
+
+    next()
+
+}
+
+
+const PhoneNumberPattern = (phoneNumber) => {
+    const phoneRegex = /^\d{11}$/;
+    return phoneRegex.test(phoneNumber);
+  };
+  
+
 
       
 
@@ -129,5 +156,6 @@ module.exports = {
     validatePassword,
     validatEmail,
     validateOldPassword,
-    validateNewPassword
+    validateNewPassword,
+    validatePhoneNumber
 }
