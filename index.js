@@ -31,7 +31,7 @@ app.listen(PORT, ()=>{
 
 
 app.get("/", (req, res)=>{
-    return res.status(200).json({message: "welcome To Wallet Server"})
+    return res.status(200).json({message: "Welcome To Wallet Server"})
 })
 
 app.use("/api", userRoutes)
