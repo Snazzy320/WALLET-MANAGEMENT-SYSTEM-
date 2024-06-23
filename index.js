@@ -5,6 +5,7 @@ dotenv.config()
 const connectDatabase = require("./database/data-base-entries.js")
 const userRoutes = require("./routes/userRoutes")
 const transactionsRoutes = require("./routes/transactionRoutes")
+const adminRoutes = require("./routes/adminRoutes")
 
 
 
@@ -36,6 +37,7 @@ app.get("/", (req, res)=>{
 
 app.use("/api", userRoutes)
 app.use("/transactions", transactionsRoutes)
+app.use("/admin", adminRoutes)
 
 app.use((req,res)=>{
     res.status(404).json({

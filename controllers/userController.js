@@ -4,26 +4,6 @@ const jsonwebtoken = require("jsonwebtoken")
 const { sendWelcomeEmail,sendResetPasswordEmail  } = require("../utilities/utilities")
 
 
-const  handleAllUsersDetails = async(req, res)=>{
-
-    try {
-
-        const users = await usersEntries.find()
-
-        return res.status(200).json({
-            message: "successful",
-            count: users.length,
-            users
-        })
-        
-    } catch (error) {
-
-        return res.status(500).json({message: error.message})
-        
-    }
-   
-
-}
 
 const handleNewUserRegisteration = async(req, res)=>{
    
@@ -159,32 +139,6 @@ const handleNewUserRegisteration = async(req, res)=>{
 
     }
 
-    const handleGetOneUser = async(req, res)=>{
-
-        try {
-
-            
-            const { id } = req.params
-
-            const oneUser =await usersEntries.findById(id )
-
-            return res.status(200).json({
-                message: "successful",
-                oneUser
-            })
-
-
-        
-
-        } catch (error) {
-
-            return res.status(500).json({message: error.message})
-            
-        }
-            
-
-    }
-
     const userPasswordUpdate = async(req,res)=>{
 
     try {
@@ -230,8 +184,6 @@ const handleNewUserRegisteration = async(req, res)=>{
         try {
 
         const user = req.user
-
-        // const { id } = req.params
 
         const { fullName, userName, email, oldPassword, newPassword, phoneNumber } = req.body
 
@@ -299,16 +251,14 @@ const handleNewUserRegisteration = async(req, res)=>{
 
         try {
 
-            const { id } = req.params
+            const user = req.user
 
 
-            const deleteAccount = await usersEntries.findByIdAndDelete(id)
+            const deleteAccount = await usersEntries.findByIdAndDelete(user.id)
 
             return res.status(200).json({
                 message: "deleted successfully",
                
-
-
             })
             
         } catch (error) {
@@ -404,14 +354,10 @@ const handleNewUserRegisteration = async(req, res)=>{
 
         try {
 
-            const { id } = req.params
+            const user = req.user
 
-            const user = await usersEntries.findById(id)
+            const disableUser = await usersEntries.findById(user.id)
     
-            if(!user) {
-                return res.status(404).json({message: "user not found"})
-    
-            }
     
             user.active = false
     
@@ -455,9 +401,7 @@ const handleNewUserRegisteration = async(req, res)=>{
 
 module.exports = {
     handleNewUserRegisteration,
-    handleAllUsersDetails,
     handleUsersLogin,
-    handleGetOneUser,
     userPasswordUpdate,
     handleFullUpdate,
     handleDeleteUserAccount,
