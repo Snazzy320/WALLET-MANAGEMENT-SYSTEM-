@@ -307,7 +307,7 @@ const handleNewUserRegisteration = async(req, res)=>{
 
 
         return res.status(200).json({
-            message: "Successful"
+            message: "check email to reset password"
         })
 
             

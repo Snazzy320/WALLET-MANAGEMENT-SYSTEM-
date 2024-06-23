@@ -1,5 +1,6 @@
 const adminEntries = require("../model/adminModel")
 const usersEntries = require("../model/usersModel")
+const transactionEntries = require("../model/transactionModel")
 const bcrypt = require("bcrypt")
 const jsonwebtoken = require("jsonwebtoken")
 const { sendWelcomeEmail,sendResetPasswordEmail  } = require("../utilities/utilities")
@@ -59,7 +60,7 @@ const registerAdmin =  async(req, res)=>{
     
         return res.status(200).json({
             message: "successfull",
-            user: { userName, email, phoneNumber }
+            user: { userName, email }
             
         })
         
@@ -181,6 +182,40 @@ const registerAdmin =  async(req, res)=>{
 
     }
 
+    
+    const  userTransactionHistory = async(req, res)=>{
+    try {
+        
+        const {id} = req.params
+
+        try{
+            var user = await usersEntries.findById(id )
+        } catch (error) {
+            return res.status(404).json({message: "user doesnt exists"})
+        }
+
+        const balance = user.wallet_balance
+
+        const history = await transactionEntries.find({"user": id}).sort({createdAt: -1})
+
+        return res.status(200).json({
+            message: "successful",
+            count: history.length,
+            balance,
+            history,
+        })
+        
+    } catch (error) {
+
+        return res.status(500).json({message: error.message})
+        
+    }
+
+}
+
+
+    
+
     const handleDeleteUserAccount = async(req,res)=>{
 
         try {
@@ -271,7 +306,7 @@ const registerAdmin =  async(req, res)=>{
 
 
         return res.status(200).json({
-            message: "Successful"
+            message: "check email to reset password"
         })
 
             
@@ -311,12 +346,15 @@ const registerAdmin =  async(req, res)=>{
 
     }
 
+   
+
 
     module.exports = {
         registerAdmin,
         adminLogin,
         handleAllUsersDetails,
         handleGetOneUser,
+        userTransactionHistory,
         handleDeleteUserAccount,
         disableUserWalletAccount,
         ForgotAdminPassword,
