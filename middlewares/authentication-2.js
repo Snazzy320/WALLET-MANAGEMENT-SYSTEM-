@@ -40,6 +40,7 @@ const verifyUser = async(req, res, next) =>{
     }
 }
 
+
 const verifyAdmin = async(req, res, next) =>{
     try {
 
@@ -78,8 +79,17 @@ const verifyAdmin = async(req, res, next) =>{
     }
 }
 
+const checkAdminRole = (req, res, next) => {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Access forbidden: Admins only' });
+    }
+    next();
+  };
+  
+
 
 module.exports = {
     verifyUser,
-    verifyAdmin
+    verifyAdmin,
+    checkAdminRole
 }
